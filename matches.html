@@ -6,23 +6,23 @@
     <title>📋 المباريات</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: linear-gradient(135deg, #0a0e1a, #1a1f35); color: #fff; font-family: Arial; min-height: 100vh; padding: 20px; }
+        body { background: linear-gradient(135deg, #0a0e1a, #1a1f35); color: #fff; font-family: 'Segoe UI', Arial; min-height: 100vh; padding: 20px; }
         .container { max-width: 1000px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #2a3f5f; margin-bottom: 30px; flex-wrap: wrap; gap: 10px; }
         .header h1 { color: #ffd700; font-size: 2em; }
-        .header a { color: #ffd700; text-decoration: none; padding: 10px 20px; border: 1px solid #ffd700; border-radius: 25px; }
-        .header a:hover { background: #ffd70022; }
-        .card { background: linear-gradient(135deg, #1a1f35, #252a45); padding: 20px 25px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #2a3f5f; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .header a { color: #ffd700; text-decoration: none; padding: 10px 20px; border: 1px solid #ffd700; border-radius: 25px; transition: 0.3s; }
+        .header a:hover { background: rgba(255, 215, 0, 0.1); }
+        .card { background: linear-gradient(145deg, #1a1f35, #252a45); padding: 20px 25px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #2a3f5f; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; transition: 0.3s; }
         .card:hover { border-color: #ffd700; }
         .card .teams { font-size: 1.3em; font-weight: bold; }
-        .card .teams .home { color: #4caf50; }
-        .card .teams .away { color: #f44336; }
+        .card .teams .home { color: #2ecc71; }
+        .card .teams .away { color: #e74c3c; }
         .card .teams .vs { color: #ffd700; margin: 0 5px; }
         .card .info { color: #aaa; font-size: 0.9em; }
         .card .info span { color: #fff; }
         .btn { display: inline-block; padding: 8px 18px; background: #ffd700; color: #1a1f35; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 0.8em; }
-        .btn-danger { background: #f44336; color: #fff; }
-        .btn-danger:hover { background: #d32f2f; }
+        .btn-danger { background: #e74c3c; color: #fff; }
+        .btn-danger:hover { background: #c0392b; }
         .empty { text-align: center; padding: 60px 20px; background: #1a1f35; border-radius: 15px; border: 1px dashed #2a3f5f; }
         .empty p { font-size: 1.5em; color: #666; }
         .footer { text-align: center; padding: 30px; color: #555; border-top: 1px solid #2a3f5f; margin-top: 40px; }
