@@ -10,7 +10,7 @@ from app.utils import check_live_matches
 
 # ========== الإعدادات ==========
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts")
-CHANNEL_ID = os.environ.get("CHANNEL_ID", "@your_channel")
+CHANNEL_ID = os.environ.get("CHANNEL_ID", "@lvFaax5HzsxOTU0")
 PORT = int(os.environ.get("PORT", 5000))
 
 # ========== الجدولة ==========
