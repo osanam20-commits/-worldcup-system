@@ -36,9 +36,17 @@ def home():
     return "✅ البوت شغال! 🎉"
 
 @app.route('/matches')
-def matches():
+def matches_web():
     matches = Match.query.all()
-    return f"عدد المباريات: {len(matches)}"
+    if not matches:
+        return "📭 لا توجد مباريات حالياً"
+    
+    result = "📋 قائمة المباريات:\n\n"
+    for m in matches:
+        result += f"⚽ {m.home} 🆚 {m.away}\n"
+        result += f"📍 {m.stadium or 'غير محدد'}\n"
+        result += f"📅 {m.date or 'غير محدد'}\n\n"
+    return result
 
 # ========== بوت التليجرام ==========
 class TelegramBot:
@@ -48,6 +56,7 @@ class TelegramBot:
         self.dispatcher = self.updater.dispatcher
         self.dispatcher.add_handler(CommandHandler("start", self.start))
         self.dispatcher.add_handler(CommandHandler("help", self.help))
+        self.dispatcher.add_handler(CommandHandler("matches", self.matches))  # <-- تمت الإضافة
 
     def start(self, update: Update, context):
         update.message.reply_text(
@@ -65,6 +74,20 @@ class TelegramBot:
             "/help - هذه الرسالة\n"
             "/matches - عرض المباريات"
         )
+
+    # ========== دالة عرض المباريات ==========
+    def matches(self, update: Update, context):
+        matches = Match.query.all()
+        if not matches:
+            update.message.reply_text("📭 لا توجد مباريات حالياً")
+            return
+        
+        result = "📋 قائمة المباريات:\n\n"
+        for m in matches:
+            result += f"⚽ {m.home} 🆚 {m.away}\n"
+            result += f"📍 {m.stadium or 'غير محدد'}\n"
+            result += f"📅 {m.date or 'غير محدد'}\n\n"
+        update.message.reply_text(result)
 
     def run(self):
         logging.info("🤖 البوت يعمل...")
