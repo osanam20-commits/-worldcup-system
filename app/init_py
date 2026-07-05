@@ -1,9 +1,10 @@
-# ملف تهيئة تطبيق Flask
-import os
 from flask import Flask
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-# استيراد الصفحات (يجب أن يكون في النهاية)
-from app import routes
+@app.route('/')
+def home():
+    return "✅ البوت يعمل!"
+
+# يجب استيراد البوت بعد تعريف app
+from app import bot, routes, matches, utils
