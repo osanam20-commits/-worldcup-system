@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>➕ إضافة مباراة - كأس العالم 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0e1a, #1a1f35);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 1px solid #2a3f5f;
+            margin-bottom: 30px;
+        }
+        .header h1 { color: #ffd700; font-size: 2em; }
+        .header a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #1a1f35;
+            border: 1px solid #2a3f5f;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1em;
+            transition: 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 20px #ffd70022;
+        }
+        .form-group input::placeholder {
+            color: #555;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffd700, #f5a623);
+            color: #1a1f35;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 0 30px #ffd70033; }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #555;
+            border-top: 1px solid #2a3f5f;
+            margin-top: 40px;
+        }
+        .footer a { color: #ffd700; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>➕ إضافة مباراة جديدة</h1>
+            <a href="/">🏠 العودة للرئيسية</a>
+        </div>
+
+        <form method="POST">
+            <div class="form-group">
+                <label>🏠 الفريق الأول</label>
+                <input type="text" name="home" placeholder="مثال: الهلال" required>
+            </div>
+            
+            <div class="form-group">
+                <label>✈️ الفريق الثاني</label>
+                <input type="text" name="away" placeholder="مثال: النصر" required>
+            </div>
+            
+            <div class="form-group">
+                <label>🏴 علم الفريق الأول (اختياري)</label>
+                <input type="text" name="home_flag" placeholder="🇸🇦" value="🏴">
+            </div>
+            
+            <div class="form-group">
+                <label>🏴 علم الفريق الثاني (اختياري)</label>
+                <input type="text" name="away_flag" placeholder="🇦🇪" value="🏴">
+            </div>
+            
+            <div class="form-group">
+                <label>📍 الملعب</label>
+                <input type="text" name="stadium" placeholder="مثال: ملعب الملك فهد">
+            </div>
+            
+            <div class="form-group">
+                <label>📅 التاريخ</label>
+                <input type="date" name="date" required>
+            </div>
+            
+            <div class="form-group">
+                <label>🕒 الوقت</label>
+                <input type="time" name="time" required>
+            </div>
+            
+            <div class="form-group">
+                <label>🏷️ المرحلة</label>
+                <select name="stage">
+                    <option value="دور المجموعات">دور المجموعات</option>
+                    <option value="دور الـ16">دور الـ16</option>
+                    <option value="ربع النهائي">ربع النهائي</option>
+                    <option value="نصف النهائي">نصف النهائي</option>
+                    <option value="النهائي">النهائي</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn">✅ إضافة المباراة</button>
+        </form>
+
+        <div class="footer">
+            <p>🏆 كأس العالم  - جميع الحقوق محفوظة</p>
+        </div>
+    </div>
+</body>
+  </html>
