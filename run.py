@@ -32,7 +32,7 @@ def add_match(home, away, home_flag="🏴", away_flag="🏴", stadium="",
         'time': time,
         'stage': stage,
         'tournament': tournament,
-        'status': 'upcoming',  # upcoming, live, finished
+        'status': 'upcoming',
         'home_score': 0,
         'away_score': 0,
         'created_at': datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -51,29 +51,19 @@ add_match("مانشستر سيتي", "ليفربول", "🏴", "🏴", "الات
 
 # ========== دوال مساعدة ==========
 def get_tournaments():
-    """جلب جميع البطولات"""
     return list(set(m['tournament'] for m in all_matches))
 
 def get_matches_by_tournament(tournament):
-    """جلب مباريات بطولة معينة"""
     return [m for m in all_matches if m['tournament'] == tournament]
 
 def get_today_matches():
-    """جلب مباريات اليوم"""
     today = datetime.now().strftime("%Y-%m-%d")
     return [m for m in all_matches if m['date'] == today]
 
 def get_live_matches():
-    """جلب المباريات المباشرة"""
     return [m for m in all_matches if m['status'] == 'live']
 
-def get_upcoming_matches():
-    """جلب المباريات القادمة"""
-    today = datetime.now().strftime("%Y-%m-%d")
-    return [m for m in all_matches if m['status'] == 'upcoming' and m['date'] >= today]
-
 def create_match_card(match):
-    """إنشاء بطاقة مباراة نصية"""
     status_emoji = "🔴" if match['status'] == 'live' else "⏳" if match['status'] == 'upcoming' else "✅"
     status_text = "مباشر" if match['status'] == 'live' else "قادمة" if match['status'] == 'upcoming' else "انتهت"
     
@@ -110,12 +100,11 @@ HTML_TEMPLATE = """
         body {
             background: linear-gradient(135deg, #0a0e1a, #1a1f35);
             color: #fff;
-            font-family: 'Tajawal', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             min-height: 100vh;
             padding: 20px;
         }
         .container { max-width: 1200px; margin: 0 auto; }
-        
         .header {
             text-align: center;
             padding: 40px;
@@ -124,9 +113,18 @@ HTML_TEMPLATE = """
             margin-bottom: 30px;
             border: 1px solid rgba(255, 215, 0, 0.2);
         }
-        .header h1 { font-size: 3.5em; color: #ffd700; }
-        .header p { color: #aaa; font-size: 1.2em; margin-top: 10px; }
-        
+        .header h1 { font-size: 3em; color: #ffd700; }
+        .header p { color: #aaa; font-size: 1.2em; }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ffd700, #f5a623);
+            color: #1a1f35;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            margin: 5px;
+        }
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -142,7 +140,6 @@ HTML_TEMPLATE = """
         }
         .stat-box .number { font-size: 2.5em; color: #ffd700; font-weight: bold; }
         .stat-box .label { color: #aaa; }
-        
         .section-title {
             font-size: 2em;
             color: #ffd700;
@@ -150,29 +147,6 @@ HTML_TEMPLATE = """
             padding-bottom: 10px;
             border-bottom: 2px solid rgba(255, 215, 0, 0.2);
         }
-        
-        .filter-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .filter-btn {
-            padding: 8px 20px;
-            background: #1a1f35;
-            color: #aaa;
-            border: 1px solid #2a3f5f;
-            border-radius: 25px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .filter-btn:hover, .filter-btn.active {
-            background: #ffd700;
-            color: #1a1f35;
-            border-color: #ffd700;
-        }
-        
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -187,56 +161,13 @@ HTML_TEMPLATE = """
             text-align: center;
             transition: 0.3s;
         }
-        .card:hover {
-            border-color: #ffd700;
-            transform: translateY(-5px);
-        }
-        .card .tournament {
-            color: #ffd700;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-        .card .stage {
-            background: rgba(255, 215, 0, 0.15);
-            color: #ffd700;
-            padding: 3px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            display: inline-block;
-        }
-        .card .status-badge {
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 0.7em;
-            display: inline-block;
-            margin: 5px 0;
-        }
-        .status-upcoming { background: #3498db; color: #fff; }
-        .status-live { background: #e74c3c; color: #fff; animation: blink 1s infinite; }
-        .status-finished { background: #2ecc71; color: #fff; }
-        @keyframes blink { 50% { opacity: 0.4; } }
-        
+        .card:hover { border-color: #ffd700; transform: translateY(-5px); }
         .card .teams { font-size: 1.5em; font-weight: bold; margin: 15px 0; }
         .card .teams .home { color: #2ecc71; }
         .card .teams .away { color: #e74c3c; }
         .card .teams .vs { color: #ffd700; margin: 0 10px; }
         .card .info { color: #aaa; line-height: 1.8; }
         .card .info span { color: #fff; }
-        .card .score { font-size: 2em; color: #ffd700; margin: 10px 0; }
-        .card .match-id { color: #555; font-size: 0.7em; margin-top: 10px; }
-        
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #ffd700, #f5a623);
-            color: #1a1f35;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            margin: 5px;
-        }
-        .btn:hover { transform: scale(1.05); }
-        
         .footer {
             text-align: center;
             padding: 30px;
@@ -245,7 +176,6 @@ HTML_TEMPLATE = """
             margin-top: 40px;
         }
         .footer a { color: #ffd700; text-decoration: none; }
-        
         @media (max-width: 600px) {
             .header h1 { font-size: 2em; }
             .card .teams { font-size: 1.2em; }
@@ -256,7 +186,7 @@ HTML_TEMPLATE = """
     <div class="container">
         <div class="header">
             <h1>🏆 كأس العالم 2026</h1>
-            <p>جميع البطولات - جميع المباريات - جميع النتائج</p>
+            <p>تابع جميع المباريات والنتائج</p>
             <div style="margin-top: 15px;">
                 <a href="https://t.me/Ali_worldcup_bot" class="btn">🤖 البوت على تليجرام</a>
                 <a href="/tournaments" class="btn" style="background:transparent;border:2px solid #ffd700;color:#ffd700;">🏆 البطولات</a>
@@ -299,36 +229,9 @@ HTML_TEMPLATE = """
             {% endfor %}
         </div>
 
-        <h2 class="section-title">🔴 مباريات مباشرة</h2>
-        <div class="cards">
-            {% for match in live_matches %}
-            <div class="card" style="border-color:#e74c3c;">
-                <div class="tournament">🏆 {{ match.tournament }}</div>
-                <div class="stage">{{ match.stage }}</div>
-                <div class="status-badge status-live">🔴 مباشر</div>
-                <div class="teams">
-                    <span class="home">{{ match.home_flag }} {{ match.home }}</span>
-                    <span class="vs">⚔️</span>
-                    <span class="away">{{ match.away_flag }} {{ match.away }}</span>
-                </div>
-                <div class="score">{{ match.home_score }} - {{ match.away_score }}</div>
-                <div class="info">
-                    📍 <span>{{ match.stadium }}</span><br>
-                    📅 <span>{{ match.date }}</span> | 🕒 <span>{{ match.time }}</span>
-                </div>
-            </div>
-            {% else %}
-            <div class="card" style="grid-column:1/-1;padding:40px;">
-                <p>🔴 لا توجد مباريات مباشرة</p>
-            </div>
-            {% endfor %}
-        </div>
-
         <div class="footer">
             <p>🏆 كأس العالم 2026 - جميع الحقوق محفوظة</p>
-            <p style="font-size:0.85em;color:#444;">
-                🤖 <a href="https://t.me/Ali_worldcup_bot">@Ali_worldcup_bot</a>
-            </p>
+            <p style="font-size:0.85em;color:#444;">🤖 <a href="https://t.me/Ali_worldcup_bot">@Ali_worldcup_bot</a></p>
         </div>
     </div>
 </body>
@@ -362,62 +265,20 @@ def tournaments_page():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>🏆 البطولات - كأس العالم 2026</title>
+        <title>🏆 البطولات</title>
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body {
-                background: linear-gradient(135deg, #0a0e1a, #1a1f35);
-                color: #fff;
-                font-family: Arial, sans-serif;
-                min-height: 100vh;
-                padding: 20px;
-            }
+            body { background: linear-gradient(135deg, #0a0e1a, #1a1f35); color: #fff; font-family: Arial, sans-serif; min-height: 100vh; padding: 20px; }
             .container { max-width: 800px; margin: 0 auto; }
-            .header {
-                text-align: center;
-                padding: 30px;
-                background: linear-gradient(145deg, #1a1f35, #2a3f5f);
-                border-radius: 20px;
-                margin-bottom: 30px;
-                border: 1px solid rgba(255, 215, 0, 0.2);
-            }
+            .header { text-align: center; padding: 30px; background: linear-gradient(145deg, #1a1f35, #2a3f5f); border-radius: 20px; margin-bottom: 30px; border: 1px solid rgba(255, 215, 0, 0.2); }
             .header h1 { color: #ffd700; font-size: 2.5em; }
             .header a { color: #ffd700; text-decoration: none; }
-            .card {
-                background: #1a1f35;
-                padding: 20px 30px;
-                border-radius: 15px;
-                margin-bottom: 15px;
-                border: 1px solid #2a3f5f;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                transition: 0.3s;
-            }
+            .card { background: #1a1f35; padding: 20px 30px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #2a3f5f; display: flex; justify-content: space-between; align-items: center; }
             .card:hover { border-color: #ffd700; }
             .card .name { font-size: 1.3em; color: #ffd700; }
             .card .count { color: #aaa; }
-            .btn {
-                display: inline-block;
-                padding: 12px 30px;
-                background: linear-gradient(135deg, #ffd700, #f5a623);
-                color: #1a1f35;
-                text-decoration: none;
-                border-radius: 30px;
-                font-weight: bold;
-            }
-            .btn-secondary {
-                background: transparent;
-                color: #ffd700;
-                border: 2px solid #ffd700;
-            }
-            .footer {
-                text-align: center;
-                padding: 30px;
-                color: #555;
-                border-top: 1px solid #2a3f5f;
-                margin-top: 40px;
-            }
+            .btn { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #ffd700, #f5a623); color: #1a1f35; text-decoration: none; border-radius: 30px; font-weight: bold; }
+            .footer { text-align: center; padding: 30px; color: #555; border-top: 1px solid #2a3f5f; margin-top: 40px; }
             .footer a { color: #ffd700; text-decoration: none; }
         </style>
     </head>
@@ -461,34 +322,26 @@ CHANNEL_ID = os.environ.get("CHANNEL_ID", "@your_channel")
 
 def start(update: Update, context):
     update.message.reply_text(
-        "🎉 **مرحباً بك في بوت كأس العالم 2026!**\n\n"
-        "📌 **الأوامر المتاحة:**\n"
+        "🎉 مرحباً بك في بوت كأس العالم 2026!\n\n"
         "/start - بدء البوت\n"
         "/help - المساعدة\n"
         "/today - مباريات اليوم\n"
         "/live - المباريات المباشرة\n"
         "/matches - جميع المباريات\n"
         "/tournaments - البطولات\n"
-        "/send - نشر بطاقات اليوم للقناة\n\n"
-        "🏆 جميع البطولات - جميع المباريات",
-        parse_mode='Markdown'
+        "/send - نشر بطاقات اليوم للقناة"
     )
 
 def help_command(update: Update, context):
     update.message.reply_text(
-        "❓ **المساعدة:**\n\n"
+        "❓ المساعدة:\n\n"
         "/start - بدء البوت\n"
         "/help - هذه الرسالة\n"
         "/today - مباريات اليوم\n"
         "/live - المباريات المباشرة\n"
         "/matches - جميع المباريات\n"
         "/tournaments - قائمة البطولات\n"
-        "/send - نشر بطاقات اليوم للقناة\n\n"
-        "📌 **للمشرفين:**\n"
-        "/add_match الفريق1 الفريق2 الملعب التاريخ الوقت البطولة المرحلة\n"
-        "/set_live معرف_المباراة\n"
-        "/set_score معرف_المباراة هدف1 هدف2",
-        parse_mode='Markdown'
+        "/send - نشر بطاقات اليوم للقناة"
     )
 
 def today_command(update: Update, context):
@@ -497,13 +350,13 @@ def today_command(update: Update, context):
         update.message.reply_text("📭 لا توجد مباريات اليوم")
         return
     
-    text = "📅 **مباريات اليوم:**\n\n"
+    text = "📅 مباريات اليوم:\n\n"
     for m in matches:
         status_emoji = "🔴" if m['status'] == 'live' else "⏳"
         text += f"{status_emoji} {m['home_flag']} {m['home']} 🆚 {m['away_flag']} {m['away']}\n"
         text += f"🏆 {m['tournament']} | 📍 {m['stadium']} | 🕒 {m['time']}\n\n"
     
-    update.message.reply_text(text, parse_mode='Markdown')
+    update.message.reply_text(text)
 
 def live_command(update: Update, context):
     matches = get_live_matches()
@@ -511,25 +364,25 @@ def live_command(update: Update, context):
         update.message.reply_text("🔴 لا توجد مباريات مباشرة")
         return
     
-    text = "🔴 **المباريات المباشرة:**\n\n"
+    text = "🔴 المباريات المباشرة:\n\n"
     for m in matches:
         text += f"{m['home_flag']} {m['home']} {m['home_score']} - {m['away_score']} {m['away_flag']} {m['away']}\n"
         text += f"🏆 {m['tournament']} | 📍 {m['stadium']}\n\n"
     
-    update.message.reply_text(text, parse_mode='Markdown')
+    update.message.reply_text(text)
 
 def matches_command(update: Update, context):
     if not all_matches:
         update.message.reply_text("📭 لا توجد مباريات")
         return
     
-    text = "📋 **جميع المباريات:**\n\n"
+    text = "📋 جميع المباريات:\n\n"
     for m in all_matches:
         status_emoji = "🔴" if m['status'] == 'live' else "⏳" if m['status'] == 'upcoming' else "✅"
         text += f"{status_emoji} #{m['id']} {m['home_flag']} {m['home']} 🆚 {m['away_flag']} {m['away']}\n"
         text += f"🏆 {m['tournament']} | 📅 {m['date']} | 🕒 {m['time']}\n\n"
     
-    update.message.reply_text(text, parse_mode='Markdown')
+    update.message.reply_text(text)
 
 def tournaments_command(update: Update, context):
     tournaments = get_tournaments()
@@ -537,15 +390,14 @@ def tournaments_command(update: Update, context):
         update.message.reply_text("📭 لا توجد بطولات")
         return
     
-    text = "🏆 **البطولات:**\n\n"
+    text = "🏆 البطولات:\n\n"
     for t in tournaments:
         count = len(get_matches_by_tournament(t))
         text += f"🏆 {t} - {count} مباراة\n"
     
-    update.message.reply_text(text, parse_mode='Markdown')
+    update.message.reply_text(text)
 
 def send_command(update: Update, context):
-    """إرسال بطاقات اليوم إلى القناة"""
     try:
         today_matches = get_today_matches()
         if not today_matches:
@@ -555,4 +407,125 @@ def send_command(update: Update, context):
         for match in today_matches:
             card = create_match_card(match)
             keyboard = InlineKeyboardMarkup([
-                [InlineKeyboardButt
+                [
+                    InlineKeyboardButton(f"🏠 {match['home']}", callback_data=f"vote_home_{match['id']}"),
+                    InlineKeyboardButton(f"✈️ {match['away']}", callback_data=f"vote_away_{match['id']}")
+                ],
+                [
+                    InlineKeyboardButton("⚽ تعادل", callback_data=f"vote_draw_{match['id']}")
+                ]
+            ])
+            context.bot.send_message(
+                chat_id=CHANNEL_ID,
+                text=card,
+                reply_markup=keyboard,
+                parse_mode='Markdown'
+            )
+            time.sleep(1)
+        
+        update.message.reply_text(f"✅ تم إرسال {len(today_matches)} بطاقة إلى القناة!")
+    except Exception as e:
+        update.message.reply_text(f"❌ خطأ: {e}")
+
+def add_match_command(update: Update, context):
+    try:
+        args = context.args
+        if len(args) < 7:
+            update.message.reply_text(
+                "⚠️ الصيغة: /add_match الفريق1 الفريق2 الملعب التاريخ الوقت البطولة المرحلة\n"
+                "مثال: /add_match الهلال النصر ملعب_الملك_فهد 2026-07-15 20:00 دوري_روشن نهائي"
+            )
+            return
+        
+        match = add_match(
+            home=args[0],
+            away=args[1],
+            stadium=args[2],
+            date=args[3],
+            time=args[4],
+            tournament=args[5],
+            stage=args[6] if len(args) > 6 else "دور المجموعات"
+        )
+        update.message.reply_text(
+            f"✅ تم إضافة المباراة:\n"
+            f"🏆 {match['tournament']}\n"
+            f"{match['home']} 🆚 {match['away']}\n"
+            f"📍 {match['stadium']} | 📅 {match['date']} | 🕒 {match['time']}"
+        )
+    except Exception as e:
+        update.message.reply_text(f"❌ خطأ: {e}")
+
+def set_live_command(update: Update, context):
+    try:
+        match_id = int(context.args[0])
+        for match in all_matches:
+            if match['id'] == match_id:
+                match['status'] = 'live'
+                update.message.reply_text(f"✅ تم تفعيل المباراة #{match_id} كمباشرة")
+                context.bot.send_message(
+                    chat_id=CHANNEL_ID,
+                    text=f"🔴 المباراة أصبحت مباشرة!\n\n{create_match_card(match)}",
+                    parse_mode='Markdown'
+                )
+                return
+        update.message.reply_text(f"❌ المباراة #{match_id} غير موجودة")
+    except Exception as e:
+        update.message.reply_text(f"❌ خطأ: {e}")
+
+def set_score_command(update: Update, context):
+    try:
+        args = context.args
+        match_id = int(args[0])
+        home_score = int(args[1])
+        away_score = int(args[2])
+        
+        for match in all_matches:
+            if match['id'] == match_id:
+                match['home_score'] = home_score
+                match['away_score'] = away_score
+                update.message.reply_text(f"✅ تم تحديث النتيجة: {home_score} - {away_score}")
+                context.bot.send_message(
+                    chat_id=CHANNEL_ID,
+                    text=f"⚽ تحديث النتيجة:\n\n{create_match_card(match)}",
+                    parse_mode='Markdown'
+                )
+                return
+        update.message.reply_text(f"❌ المباراة #{match_id} غير موجودة")
+    except Exception as e:
+        update.message.reply_text(f"❌ خطأ: {e}")
+
+def button_callback(update: Update, context):
+    query = update.callback_query
+    query.answer()
+    
+    data = query.data
+    if data.startswith("vote_home_"):
+        match_id = int(data.split("_")[2])
+        for match in all_matches:
+            if match['id'] == match_id:
+                match['home_votes'] = match.get('home_votes', 0) + 1
+                query.edit_message_text(f"🗳️ صوتك لـ {match['home']} تم تسجيله!")
+                return
+    elif data.startswith("vote_away_"):
+        match_id = int(data.split("_")[2])
+        for match in all_matches:
+            if match['id'] == match_id:
+                match['away_votes'] = match.get('away_votes', 0) + 1
+                query.edit_message_text(f"🗳️ صوتك لـ {match['away']} تم تسجيله!")
+                return
+    elif data.startswith("vote_draw_"):
+        match_id = int(data.split("_")[2])
+        for match in all_matches:
+            if match['id'] == match_id:
+                match['draw_votes'] = match.get('draw_votes', 0) + 1
+                query.edit_message_text("🗳️ صوتك للتعادل تم تسجيله!")
+                return
+
+# ========== تشغيل البوت ==========
+def run_bot():
+    if not BOT_TOKEN or BOT_TOKEN == "PUT_YOUR_BOT_TOKEN_HERE":
+        logging.warning("⚠️ BOT_TOKEN غير مضبوط")
+        return
+    
+    updater = Updater(BOT_TOKEN)
+    dp = updater.dispa
