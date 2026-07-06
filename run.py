@@ -47,15 +47,45 @@ def add_match(home, away, home_flag="🏴", away_flag="🏴", stadium="",
     match_id += 1
     return match
 
-# ========== مباريات تجريبية (كأس العالم 2026) ==========
+# ========== مباريات اليوم (7 يوليو 2026) ==========
+# الأرجنتين × مصر - 12 ظهراً
+add_match("الأرجنتين", "مصر", "🇦🇷", "🇪🇬", "ملعب أمريكا", "2026-07-07", "12:00", "دور الـ16", "كأس العالم 2026")
+
+# سويسرا × كولومبيا - 4 مساءً
+add_match("سويسرا", "كولومبيا", "🇨🇭", "🇨🇴", "ملعب أمريكا", "2026-07-07", "16:00", "دور الـ16", "كأس العالم 2026")
+
+# ========== مباريات الأيام القادمة ==========
+# 9 يوليو: فرنسا × المغرب
+add_match("فرنسا", "المغرب", "🇫🇷", "🇲🇦", "ملعب أمريكا", "2026-07-09", "18:00", "ربع النهائي", "كأس العالم 2026")
+
+# 10 يوليو: البرتغال/إسبانيا × أمريكا/بلجيكا
+add_match("البرتغال/إسبانيا", "أمريكا/بلجيكا", "🇵🇹", "🇺🇸", "ملعب أمريكا", "2026-07-10", "18:00", "ربع النهائي", "كأس العالم 2026")
+
+# 11 يوليو: البرازيل/النرويج × المكسيك/إنجلترا
+add_match("البرازيل/النرويج", "المكسيك/إنجلترا", "🇧🇷", "🇲🇽", "ملعب أمريكا", "2026-07-11", "16:00", "ربع النهائي", "كأس العالم 2026")
+
+# 11 يوليو: الأرجنتين/مصر × سويسرا/كولومبيا
+add_match("الأرجنتين/مصر", "سويسرا/كولومبيا", "🇦🇷", "🇨🇭", "ملعب أمريكا", "2026-07-11", "20:00", "ربع النهائي", "كأس العالم 2026")
+
+# 14 يوليو: نصف النهائي الأول
+add_match("الفائز ربع الأول", "الفائز ربع الثاني", "🏆", "🏆", "أرلينغتون", "2026-07-14", "18:00", "نصف النهائي", "كأس العالم 2026")
+
+# 15 يوليو: نصف النهائي الثاني
+add_match("الفائز ربع الثالث", "الفائز ربع الرابع", "🏆", "🏆", "أتلانتا", "2026-07-15", "18:00", "نصف النهائي", "كأس العالم 2026")
+
+# 18 يوليو: المركز الثالث
+add_match("المركز الثالث", "المركز الثالث", "🥉", "🥉", "ميامي", "2026-07-18", "17:00", "المركز الثالث", "كأس العالم 2026")
+
+# 19 يوليو: النهائي
+add_match("النهائي", "النهائي", "🏆", "🏆", "ملعب ميتلايف، نيوجيرسي", "2026-07-19", "15:00", "النهائي", "كأس العالم 2026")
+
+# ========== مباريات تجريبية سابقة (للعرض) ==========
 add_match("فرنسا", "باراغواي", "🇫🇷", "🇵🇾", "ملعب أمريكا", "2026-07-04", "18:00", "دور الـ16", "كأس العالم 2026")
 add_match("المغرب", "كندا", "🇲🇦", "🇨🇦", "ملعب أمريكا", "2026-07-04", "21:00", "دور الـ16", "كأس العالم 2026")
 add_match("البرازيل", "النرويج", "🇧🇷", "🇳🇴", "ملعب أمريكا", "2026-07-05", "16:00", "دور الـ16", "كأس العالم 2026")
 add_match("المكسيك", "إنجلترا", "🇲🇽", "🏴", "ملعب أمريكا", "2026-07-05", "20:00", "دور الـ16", "كأس العالم 2026")
 add_match("البرتغال", "إسبانيا", "🇵🇹", "🇪🇸", "ملعب أمريكا", "2026-07-06", "15:00", "دور الـ16", "كأس العالم 2026")
 add_match("أمريكا", "بلجيكا", "🇺🇸", "🇧🇪", "ملعب أمريكا", "2026-07-06", "20:00", "دور الـ16", "كأس العالم 2026")
-add_match("الأرجنتين", "مصر", "🇦🇷", "🇪🇬", "ملعب أمريكا", "2026-07-07", "12:00", "دور الـ16", "كأس العالم 2026")
-add_match("سويسرا", "كولومبيا", "🇨🇭", "🇨🇴", "ملعب أمريكا", "2026-07-07", "16:00", "دور الـ16", "كأس العالم 2026")
 
 # ========== دوال المساعدة ==========
 def get_today_matches():
@@ -67,10 +97,6 @@ def get_live_matches():
 
 def get_all_matches():
     return matches_db
-
-def get_upcoming_matches():
-    today = datetime.now().strftime("%Y-%m-%d")
-    return [m for m in matches_db if m['date'] >= today and m['status'] == 'upcoming']
 
 def get_matches_by_tournament(tournament):
     return [m for m in matches_db if m['tournament'] == tournament]
@@ -123,7 +149,7 @@ def send_to_channel(context, text, keyboard=None):
         logging.info("✅ تم إرسال الرسالة إلى القناة")
         return True
     except Exception as e:
-        logging.error(f"❌ خطأ: {e}")
+        logging.error(f"❌ خطأ في الإرسال: {e}")
         return False
 
 def send_match_to_channel(context, match):
@@ -148,17 +174,19 @@ def send_daily_matches(context):
     logging.info(f"✅ تم نشر {len(today_matches)} مباراة اليوم")
 
 def check_live_matches(context):
-    """التحقق من المباريات المباشرة وإرسال إشعار"""
     now = datetime.now()
     today = now.strftime("%Y-%m-%d")
     
     for match in matches_db:
         if match['status'] == 'upcoming' and match['date'] == today:
-            match_time = datetime.strptime(f"{match['date']} {match['time']}", "%Y-%m-%d %H:%M")
-            if match_time <= now <= match_time + timedelta(minutes=30):
-                match['status'] = 'live'
-                text = f"🔴 **المباراة أصبحت مباشرة!**\n\n{create_match_card(match)}"
-                send_to_channel(context, text)
+            try:
+                match_time = datetime.strptime(f"{match['date']} {match['time']}", "%Y-%m-%d %H:%M")
+                if match_time <= now <= match_time + timedelta(minutes=30):
+                    match['status'] = 'live'
+                    text = f"🔴 **المباراة أصبحت مباشرة!**\n\n{create_match_card(match)}"
+                    send_to_channel(context, text)
+            except:
+                pass
 
 # ========== أوامر البوت ==========
 def start(update, context):
@@ -228,7 +256,6 @@ def matches_command(update, context):
     update.message.reply_text(text, parse_mode='Markdown')
 
 def send_command(update, context):
-    """نشر مباريات اليوم في القناة"""
     try:
         send_daily_matches(context)
         update.message.reply_text("✅ تم نشر مباريات اليوم في القناة!")
@@ -236,7 +263,6 @@ def send_command(update, context):
         update.message.reply_text(f"❌ خطأ: {e}")
 
 def add_command(update, context):
-    """إضافة مباراة"""
     try:
         args = context.args
         if len(args) < 7:
@@ -262,14 +288,12 @@ def add_command(update, context):
             f"🏆 {match['tournament']} | 📅 {match['date']} | 🕒 {match['time']}"
         )
         
-        # نشر المباراة في القناة
         send_match_to_channel(context, match)
         
     except Exception as e:
         update.message.reply_text(f"❌ خطأ: {e}")
 
 def set_live_command(update, context):
-    """تفعيل مباراة كمباشرة"""
     try:
         match_id = int(context.args[0])
         for match in matches_db:
@@ -284,7 +308,6 @@ def set_live_command(update, context):
         update.message.reply_text(f"❌ خطأ: {e}")
 
 def set_score_command(update, context):
-    """تحديث النتيجة"""
     try:
         args = context.args
         match_id = int(args[0])
@@ -304,7 +327,6 @@ def set_score_command(update, context):
         update.message.reply_text(f"❌ خطأ: {e}")
 
 def delete_command(update, context):
-    """حذف مباراة"""
     try:
         match_id = int(context.args[0])
         for i, match in enumerate(matches_db):
@@ -316,7 +338,6 @@ def delete_command(update, context):
     except Exception as e:
         update.message.reply_text(f"❌ خطأ: {e}")
 
-# ========== معالجة الأزرار ==========
 def button_callback(update, context):
     query = update.callback_query
     query.answer()
@@ -391,7 +412,6 @@ HTML = """
 <p>جميع البطولات - جميع المباريات - جميع النتائج</p>
 <div style="margin-top:15px;">
 <a href="https://t.me/Ali_worldcup_bot" class="btn">🤖 البوت على تليجرام</a>
-<a href="https://t.me/{{ channel_name }}" class="btn" style="background:transparent;border:2px solid #ffd700;color:#ffd700;">📢 القناة</a>
 </div>
 </div>
 <div class="stats">
@@ -439,55 +459,54 @@ def home():
     total = len(matches)
     today_count = len(get_today_matches())
     live_count = len(get_live_matches())
-    channel_name = CHANNEL_ID.replace('@', '')
     return render_template_string(
         HTML, 
         matches=matches, 
         total=total, 
         today_count=today_count,
-        live_count=live_count,
-        channel_name=channel_name
+        live_count=live_count
     )
 
 # ========== تشغيل البوت ==========
 def run_bot():
-    if not BOT_TOKEN or BOT_TOKEN == "PUT_YOUR_BOT_TOKEN_HERE":
+    if not BOT_TOKEN or BOT_TOKEN == "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts":
         logging.warning("⚠️ BOT_TOKEN غير مضبوط")
         return
     
-    updater = Updater(BOT_TOKEN)
-    dp = updater.dispatcher
-    
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", help_command))
-    dp.add_handler(CommandHandler("today", today_command))
-    dp.add_handler(CommandHandler("live", live_command))
-    dp.add_handler(CommandHandler("matches", matches_command))
-    dp.add_handler(CommandHandler("send", send_command))
-    dp.add_handler(CommandHandler("add", add_command))
-    dp.add_handler(CommandHandler("set_live", set_live_command))
-    dp.add_handler(CommandHandler("set_score", set_score_command))
-    dp.add_handler(CommandHandler("delete", delete_command))
-    dp.add_handler(CallbackQueryHandler(button_callback))
-    
-    # جدولة النشر التلقائي
-    def schedule_check():
-        while True:
-            try:
-                check_live_matches(updater)
-                time.sleep(300)
-            except Exception as e:
-                logging.error(f"❌ خطأ: {e}")
-                time.sleep(60)
-    
-    threading.Thread(target=schedule_check, daemon=True).start()
-    
-    logging.info("🤖 البوت يعمل...")
-    updater.start_polling()
-    updater.idle()
+    try:
+        updater = Updater(BOT_TOKEN)
+        dp = updater.dispatcher
+        
+        dp.add_handler(CommandHandler("start", start))
+        dp.add_handler(CommandHandler("help", help_command))
+        dp.add_handler(CommandHandler("today", today_command))
+        dp.add_handler(CommandHandler("live", live_command))
+        dp.add_handler(CommandHandler("matches", matches_command))
+        dp.add_handler(CommandHandler("send", send_command))
+        dp.add_handler(CommandHandler("add", add_command))
+        dp.add_handler(CommandHandler("set_live", set_live_command))
+        dp.add_handler(CommandHandler("set_score", set_score_command))
+        dp.add_handler(CommandHandler("delete", delete_command))
+        dp.add_handler(CallbackQueryHandler(button_callback))
+        
+        def schedule_check():
+            while True:
+                try:
+                    check_live_matches(updater)
+                    time.sleep(60)
+                except Exception as e:
+                    logging.error(f"❌ خطأ: {e}")
+                    time.sleep(60)
+        
+        threading.Thread(target=schedule_check, daemon=True).start()
+        
+        logging.info("🤖 البوت يعمل...")
+        updater.start_polling()
+        updater.idle()
+    except Exception as e:
+        logging.error(f"❌ خطأ في البوت: {e}")
 
 # ========== التشغيل ==========
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    threading.Thread(target=run_bot, daemon=True).start()
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
+    threading.Thread(target=run_bot,
