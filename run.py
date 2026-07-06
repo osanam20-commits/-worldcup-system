@@ -469,7 +469,7 @@ def home():
 
 # ========== تشغيل البوت ==========
 def run_bot():
-    if not BOT_TOKEN or BOT_TOKEN == "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts":
+    if not BOT_TOKEN or BOT_TOKEN == "PUT_YOUR_BOT_TOKEN_HERE":
         logging.warning("⚠️ BOT_TOKEN غير مضبوط")
         return
     
