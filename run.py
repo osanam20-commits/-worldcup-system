@@ -10,8 +10,8 @@ from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 # ========== إعدادات ==========
 app = Flask(__name__)
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8689943788AAFfmE62a4heLXYAcOXvSUgmkLs5KZZwts")
-CHANNEL_ID = os.environ.get("CHANNEL_ID", "@lvFaax5HzsxOTU0")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts")
+CHANNEL_ID = "@lvFaax5HzsxOTU0"  # ← تم إدخال معرف القناة مباشرة
 
 # ========== قاعدة بيانات المباريات ==========
 matches_db = []
@@ -174,6 +174,10 @@ def send_daily_matches(context):
     schedule = create_full_schedule()
     send_to_channel(context, schedule)
     logging.info(f"✅ تم نشر جدول مباريات اليوم")
+
+def send_match_to_channel(context, match):
+    card = create_match_card(match)
+    send_to_channel(context, card)
 
 # ========== أوامر البوت ==========
 def start(update, context):
@@ -358,10 +362,6 @@ def button_callback(update, context):
                 match['draw_votes'] = match.get('draw_votes', 0) + 1
                 query.edit_message_text("🗳️ صوتك للتعادل تم تسجيله!")
                 return
-
-def send_match_to_channel(context, match):
-    card = create_match_card(match)
-    send_to_channel(context, card)
 
 # ========== صفحة الموقع ==========
 HTML_TEMPLATE = """
@@ -606,4 +606,4 @@ HTML_TEMPLATE = """
         }
         .gz-match-team.away { justify-content: flex-end; flex-direction: row-reverse; }
         .gz-match-team-logo {
-            width: 34px;
+            width: 34
