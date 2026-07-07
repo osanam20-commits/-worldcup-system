@@ -50,7 +50,7 @@ def add_match(home, away, home_flag="🏴", away_flag="🏴", stadium="",
     match_id += 1
     return match
 
-# ========== إضافة مباريات جو كوره ==========
+# ========== إضافة مباريات ==========
 add_match("الأهلي", "الزمالك", "🇪🇬", "🇪🇬", "استاد القاهرة", 
           "2026-07-07", "20:00", "نهائي", "الدوري المصري",
           "ON Time", "ميدو", "ON Sport", "أبو تريكة")
@@ -175,14 +175,10 @@ def send_daily_matches(context):
     send_to_channel(context, schedule)
     logging.info(f"✅ تم نشر جدول مباريات اليوم")
 
-def send_match_to_channel(context, match):
-    card = create_match_card(match)
-    send_to_channel(context, card)
-
 # ========== أوامر البوت ==========
 def start(update, context):
     update.message.reply_text(
-        "🎉 **مرحباً بك في جو كوره!**\n\n"
+        "🎉 **مرحباً بك في بوت جو كوره!**\n\n"
         "📌 **الأوامر المتاحة:**\n"
         "/start - بدء البوت\n"
         "/help - المساعدة\n"
@@ -363,6 +359,10 @@ def button_callback(update, context):
                 query.edit_message_text("🗳️ صوتك للتعادل تم تسجيله!")
                 return
 
+def send_match_to_channel(context, match):
+    card = create_match_card(match)
+    send_to_channel(context, card)
+
 # ========== صفحة الموقع ==========
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -370,7 +370,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>جو كوره - GoalKora | بوابتك الرياضية الشاملة</title>
+    <title>جو كوره - GoalKora</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
@@ -564,13 +564,6 @@ HTML_TEMPLATE = """
             align-items: center;
             gap: 10px;
         }
-        .gz-section-title .badge {
-            background: var(--gz-accent);
-            color: #fff;
-            font-size: 12px;
-            padding: 2px 12px;
-            border-radius: 20px;
-        }
         
         .gz-match-list {
             display: flex;
@@ -605,7 +598,12 @@ HTML_TEMPLATE = """
             color: var(--gz-text-secondary);
             text-align: center;
         }
+        .gz-match-time-cell.live-time { color: var(--gz-accent); }
         .gz-match-team {
             display: flex;
             align-items: center;
-      
+            gap: 10px;
+        }
+        .gz-match-team.away { justify-content: flex-end; flex-direction: row-reverse; }
+        .gz-match-team-logo {
+            width: 34px;
