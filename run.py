@@ -13,12 +13,14 @@ app = Flask(__name__)
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts")
 CHANNEL_ID = os.environ.get("CHANNEL_ID", "@lvFaax5HzsxOTU0")
 
-# ========== قاعدة البيانات ==========
+# ========== قاعدة البيانات مع قنوات البث ==========
 matches_db = []
 match_id = 1
 
 def add_match(home, away, home_flag="🏴", away_flag="🏴", stadium="", 
-              date="", time="", stage="", tournament="", status="upcoming"):
+              date="", time="", stage="", tournament="", 
+              channel="", commentator="", channel2="", commentator2="",
+              channel3="", commentator3="", status="upcoming"):
     global match_id
     if not date:
         date = datetime.now().strftime("%Y-%m-%d")
@@ -36,6 +38,12 @@ def add_match(home, away, home_flag="🏴", away_flag="🏴", stadium="",
         'time': time,
         'stage': stage,
         'tournament': tournament,
+        'channel': channel,
+        'commentator': commentator,
+        'channel2': channel2,
+        'commentator2': commentator2,
+        'channel3': channel3,
+        'commentator3': commentator3,
         'status': status,
         'home_score': 0,
         'away_score': 0
@@ -44,9 +52,21 @@ def add_match(home, away, home_flag="🏴", away_flag="🏴", stadium="",
     match_id += 1
     return match
 
-# ========== مباريات اليوم (7 يوليو 2026) ==========
-add_match("الأرجنتين", "مصر", "🇦🇷", "🇪🇬", "ملعب أمريكا", "2026-07-07", "12:00", "دور الـ16", "كأس العالم 2026")
-add_match("سويسرا", "كولومبيا", "🇨🇭", "🇨🇴", "ملعب أمريكا", "2026-07-07", "16:00", "دور الـ16", "كأس العالم 2026")
+# ========== مباريات اليوم 7 يوليو 2026 ==========
+add_match("الولايات المتحدة", "بلجيكا", "🇺🇸", "🇧🇪", "ملعب أمريكا", 
+          "2026-07-07", "03:00", "دور الـ16", "كأس العالم 2026",
+          "beIN Max 2", "حفيظ دراجي", "beIN Max 4", "عامر الخوذيري",
+          "beIN 4K HDR", "حفيظ دراجي")
+
+add_match("الأرجنتين", "مصر", "🇦🇷", "🇪🇬", "ملعب أمريكا", 
+          "2026-07-07", "19:00", "دور الـ16", "كأس العالم 2026",
+          "beIN Max 1", "علي محمد علي", "beIN Max 3", "خليل البلوشي",
+          "beIN 4K HDR", "علي محمد علي")
+
+add_match("سويسرا", "كولومبيا", "🇨🇭", "🇨🇴", "ملعب أمريكا", 
+          "2026-07-07", "23:00", "دور الـ16", "كأس العالم 2026",
+          "beIN Max 2", "علي سعيد الكعبي", "beIN Max 4", "محمد بركات",
+          "beIN 4K HDR", "علي سعيد الكعبي")
 
 # ========== دوال المساعدة ==========
 def get_today_matches():
@@ -57,17 +77,64 @@ def get_all_matches():
     return matches_db
 
 def create_match_card(match):
-    card = (
-        f"🏆 **{match['tournament']}**\n"
-        f"📌 **{match['stage']}**\n\n"
-        f"{match['home_flag']} **{match['home']}**\n"
-        f"⚔️ VS\n"
-        f"{match['away_flag']} **{match['away']}**\n\n"
-        f"📍 {match['stadium']}\n"
-        f"📅 {match['date']} | 🕒 {match['time']}\n"
-        f"🆔 #{match['id']}"
-    )
+    """إنشاء بطاقة مباراة بتنسيق جميل"""
+    today = datetime.now().strftime("%d/%m/%Y")
+    
+    card = f"""
+────────────────
+♦ *جدول مباريات اليوم* |
+📆 {today}
+────────────────
+🏆 *{match['tournament']}* 
+━━━━━━━━━━━━━━━━━━
+
+*🔹️ {match['home']} × {match['away']} 🔸️*
+⌚️ {match['time']}
+📺 {match['channel']}
+🎙 {match['commentator']}
+
+📺 {match['channel2']}
+🎙️ {match['commentator2']}
+
+📺 {match['channel3']}
+🎙️ {match['commentator3']}
+────────────────
+"""
     return card
+
+def create_full_schedule():
+    """إنشاء جدول كامل لجميع مباريات اليوم"""
+    matches = get_today_matches()
+    if not matches:
+        return "📭 لا توجد مباريات اليوم"
+    
+    today = datetime.now().strftime("%d/%m/%Y")
+    schedule = f"""
+────────────────
+♦ *جدول مباريات اليوم* |
+📆 {today}
+────────────────
+"""
+    
+    for match in matches:
+        schedule += f"""
+🏆 *{match['tournament']}* 
+━━━━━━━━━━━━━━━━━━
+
+*🔹️ {match['home_flag']} {match['home']} × {match['away_flag']} {match['away']} 🔸️*
+⌚️ {match['time']}
+📺 {match['channel']}
+🎙 {match['commentator']}
+
+📺 {match['channel2']}
+🎙️ {match['commentator2']}
+
+📺 {match['channel3']}
+🎙️ {match['commentator3']}
+────────────────
+"""
+    
+    return schedule
 
 def send_to_channel(context, text):
     try:
@@ -87,18 +154,18 @@ def send_daily_matches(context):
         send_to_channel(context, "📭 لا توجد مباريات اليوم")
         return
     
-    for match in today_matches:
-        card = create_match_card(match)
-        send_to_channel(context, card)
-        time.sleep(1)
+    schedule = create_full_schedule()
+    send_to_channel(context, schedule)
+    logging.info(f"✅ تم نشر جدول مباريات اليوم")
 
 # ========== أوامر البوت ==========
 def start(update, context):
     update.message.reply_text(
         "🎉 مرحباً بك في بوت كأس العالم 2026!\n\n"
+        "📌 الأوامر:\n"
         "/today - مباريات اليوم\n"
         "/matches - جميع المباريات\n"
-        "/send - نشر مباريات اليوم في القناة"
+        "/send - نشر جدول اليوم في القناة"
     )
 
 def today_command(update, context):
@@ -107,11 +174,8 @@ def today_command(update, context):
         update.message.reply_text("📭 لا توجد مباريات اليوم")
         return
     
-    text = "📅 مباريات اليوم:\n\n"
-    for m in matches:
-        text += f"{m['home_flag']} {m['home']} 🆚 {m['away_flag']} {m['away']}\n"
-        text += f"🏆 {m['tournament']} | 🕒 {m['time']}\n\n"
-    update.message.reply_text(text)
+    schedule = create_full_schedule()
+    update.message.reply_text(schedule, parse_mode='Markdown')
 
 def matches_command(update, context):
     if not matches_db:
@@ -127,7 +191,7 @@ def matches_command(update, context):
 def send_command(update, context):
     try:
         send_daily_matches(context)
-        update.message.reply_text("✅ تم نشر مباريات اليوم في القناة!")
+        update.message.reply_text("✅ تم نشر جدول مباريات اليوم في القناة!")
     except Exception as e:
         update.message.reply_text(f"❌ خطأ: {e}")
 
@@ -139,6 +203,7 @@ HTML = """
 <body style="background:#0a0e1a;color:#fff;font-family:Arial;text-align:center;padding:50px;">
 <h1 style="color:#ffd700;">🏆 كأس العالم 2026</h1>
 <p>✅ البوت يعمل!</p>
+<p>📢 تابع القناة: <a href="https://t.me/lvFaax5HzsxOTU0" style="color:#ffd700;">@lvFaax5HzsxOTU0</a></p>
 </body>
 </html>
 """
