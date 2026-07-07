@@ -365,9 +365,6 @@ def button_callback(update, context):
 
 # ========== صفحة الموقع ==========
 HTML_TEMPLATE = "<h1>مرحباً بكم في جو كوره</h1><p>الموقع قيد التطوير</p>"
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>جو كوره - GoalKora</title>
