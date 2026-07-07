@@ -364,7 +364,7 @@ def button_callback(update, context):
                 return
 
 # ========== صفحة الموقع ==========
-HTML_TEMPLATE = """
+HTML_TEMPLATE = "<h1>مرحباً بكم في جو كوره</h1><p>الموقع قيد التطوير</p>"
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
