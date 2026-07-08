@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # ضع التوكن ومعرف القناة هنا (أو عبر المتغيرات البيئية)
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts")
-CHANNEL_ID = os.environ.get("CHANNEL_ID", "@lvFaax5HzsxOTU0")
+CHANNEL_ID = os.environ.get("CHANNEL_ID", "-1004372754611")
 
 # تهيئة البوت بالمكتبة الجديدة
 bot = telebot.TeleBot(BOT_TOKEN)
