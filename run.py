@@ -2,7 +2,7 @@ import os
 import telebot
 from flask import Flask, request
 
-TOKEN = os.environ.get("8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts") # تأكد من وضعه في Environment
+TOKEN =("8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts") # تأكد من وضعه في Environment
 CHANNEL_ID = "-1004372754611"
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
