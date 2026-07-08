@@ -1,42 +1,29 @@
 import os
 import telebot
-from flask import Flask
+from flask import Flask, request
 
-# 1. إعدادات البوت
-TOKEN = "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts"
+TOKEN = os.environ.get("8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts") # تأكد من وضعه في Environment
 CHANNEL_ID = "-1004372754611"
 bot = telebot.TeleBot(TOKEN)
-
-# 2. إعدادات الموقع
 app = Flask(__name__)
+
+@app.route('/' + TOKEN, methods=['POST'])
+def get_message():
+    json_str = request.stream.read().decode('utf-8')
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return "!", 200
 
 @app.route('/')
 def home():
-    return "البوت يعمل الآن!"
+    return "Bot is running!"
 
-# 3. أوامر البوت
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message, "✅ البوت يعمل من داخل Render!")
+    bot.reply_to(message, "✅ البوت متصل عبر Webhook ويعمل!")
 
-@bot.message_handler(commands=['today'])
-def today(message):
-    bot.reply_to(message, "⚽ لا توجد مباريات اليوم.")
+# قم بتشغيل هذا الرابط مرة واحدة في المتصفح بعد الـ Deploy:
+# https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://wor-ldcup-system.onrender.com/<TOKEN>
 
-@bot.message_handler(commands=['send'])
-def send(message):
-    try:
-        bot.send_message(CHANNEL_ID, "📢 اختبار نشر من البوت.")
-        bot.reply_to(message, "✅ تم النشر!")
-    except Exception as e:
-        bot.reply_to(message, f"❌ خطأ: {e}")
-
-# 4. التشغيل المدمج (هذا هو سر النجاح)
 if __name__ == '__main__':
-    # تشغيل البوت في الخلفية
-    import threading
-    threading.Thread(target=bot.infinity_polling, daemon=True).start()
-    
-    # تشغيل الموقع (الذي يمنع إغلاق السيرفر)
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
