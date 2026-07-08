@@ -1,6 +1,6 @@
 import os
-import threading
 import telebot
+import threading
 from flask import Flask
 
 # 1. الإعدادات
@@ -9,28 +9,24 @@ CHANNEL_ID = "-1004372754611"
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# 2. كود الموقع (يظهر عند زيارة رابط Render)
+# 2. هذه الصفحة تجعل Render ترى أن الموقع يعمل (تمنع التايم أوت)
 @app.route('/')
 def home():
-    return "<h1>البوت والقناة يعملان هنا!</h1>"
+    return "البوت والقناة يعملان هنا!"
 
 # 3. أوامر البوت
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.reply_to(message, "✅ البوت والموقع يعملان معاً!")
 
-@bot.message_handler(commands=['today'])
-def today(message):
-    bot.reply_to(message, "⚽ لا توجد مباريات.")
-
-# 4. تشغيل الموقع والبوت معاً باستخدام الخيوط (Threading)
+# 4. تشغيل البوت في الخلفية
 def run_bot():
     bot.infinity_polling()
 
 if __name__ == '__main__':
-    # تشغيل البوت في خيط منفصل (Background)
+    # تشغيل البوت كـ Thread
     threading.Thread(target=run_bot, daemon=True).start()
     
-    # تشغيل الموقع (الذي يحتاجه Render ليعتبر الخدمة حية)
+    # ربط Flask بالبورت الذي تطلبه Render (وهذا هو سر الحل)
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
