@@ -5,54 +5,52 @@ from flask import Flask
 
 TOKEN = "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts"
 CHANNEL_ID = "-1004372754611"
+
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# --- أوامر الإدارة ---
+# --- أوامر الدوريات ---
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.reply_to(message, "مرحباً بك في بوت إدارة القناة! استخدم /help لرؤية الأوامر.")
-
-@bot.message_handler(commands=['help'])
-def help_cmd(message):
-    help_text = """
-أوامر البوت:
-/today - مباريات اليوم
-/standings - ترتيب الفرق
-/topscorers - هدافي البطولة
-/next - المباراة القادمة
-/news - آخر الأخبار
-/channel - رابط القناة
-/poll - إنشاء استطلاع رأي
-/schedule - جدول المباريات القادمة
+@bot.message_handler(commands=['leagues'])
+def leagues_list(message):
+    text = """
+🏆 **متابعة الدوريات والبطولات:**
+/wc - أخبار كأس العالم
+/yemen - الدوري اليمني
+/epl - الدوري الإنجليزي
+/laliga - الدوري الإسباني
+/ucl - دوري أبطال أوروبا
 """
-    bot.reply_to(message, help_text)
+    bot.reply_to(message, text, parse_mode="Markdown")
 
-@bot.message_handler(commands=['today'])
-def today(message):
-    bot.reply_to(message, "⚽ جدول مباريات اليوم: لا توجد مباريات.")
+@bot.message_handler(commands=['wc'])
+def wc(message):
+    bot.reply_to(message, "🌍 **كأس العالم:** \n(قم بتحديث هذه النتائج يدوياً في الكود)")
 
-@bot.message_handler(commands=['schedule'])
-def schedule(message):
-    # أمر عرض الجدول
-    bot.reply_to(message, "📅 جدول المباريات القادمة:\n1. الفريق أ ضد الفريق ب - الساعة 8:00")
+@bot.message_handler(commands=['yemen'])
+def yemen(message):
+    bot.reply_to(message, "⚽ **الدوري اليمني:** \n(تحديث النتائج...)")
 
-@bot.message_handler(commands=['poll'])
-def poll(message):
-    # أمر استطلاع الرأي
-    bot.send_poll(message.chat.id, "من سيفوز في المباراة القادمة؟", ["الفريق أ", "الفريق ب", "تعادل"])
+@bot.message_handler(commands=['ucl'])
+def ucl(message):
+    bot.reply_to(message, "🏆 **دوري أبطال أوروبا:** \n(النتائج والمواجهات...)")
 
-@bot.message_handler(commands=['news'])
-def news(message):
-    bot.reply_to(message, "📰 آخر الأخبار: البطولة تسير بشكل رائع!")
+@bot.message_handler(commands=['epl'])
+def epl(message):
+    bot.reply_to(message, "🏴󠁧󠁢󠁥󠁮󠁧󠁿 **الدوري الإنجليزي:** \n(نتائج البريميرليج...)")
 
-@bot.message_handler(commands=['channel'])
-def channel(message):
-    bot.reply_to(message, f"🔗 رابط القناة: https://t.me/c/{str(CHANNEL_ID)[4:]}")
+# --- أمر النشر الاحترافي ---
 
-# --- تشغيل البوت والموقع ---
+@bot.message_handler(commands=['broadcast'])
+def broadcast(message):
+    text = message.text.replace('/broadcast', '').strip()
+    if text:
+        bot.send_message(CHANNEL_ID, f"📢 {text}")
+        bot.reply_to(message, "✅ تم النشر!")
+    else:
+        bot.reply_to(message, "⚠️ اكتب الخبر بعد الأمر.")
 
+# --- تشغيل الموقع ---
 @app.route('/')
 def home():
     return "البوت يعمل!"
