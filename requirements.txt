@@ -1,5 +1,5 @@
 telebot
 requests
-schedule
 flask
 gunicorn
+schedule
