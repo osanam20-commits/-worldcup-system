@@ -1,12 +1,11 @@
-import os
 import telebot
 import requests
+import threading
 from flask import Flask
-from threading import Thread
-import time
+from time import sleep
 from datetime import datetime
 
-# --- الإعدادات (ضع بياناتك هنا) ---
+# --- الإعدادات ---
 TOKEN = "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts"
 CHANNEL_ID = "-1004372754611"
 API_KEY = "https://football-prediction-api.p.rapidapi.com/api/v2/predictions?market=classic&iso_date=2026-07-09&federation=UEFA"
@@ -14,53 +13,52 @@ API_KEY = "https://football-prediction-api.p.rapidapi.com/api/v2/predictions?mar
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# مسار لإبقاء الخدمة حية على Render
+# --- المسار لـ Render ---
 @app.route('/')
 def home():
     return "البوت يعمل بكفاءة!"
 
-# --- دالة جلب البيانات ---
-def get_football_predictions():
-    today = datetime.now().strftime('%Y-%m-%d')
+# --- أمر للتأكد من عمل البوت ---
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    bot.reply_to(message, "أهلاً بك! أنا جاهز لنشر التوقعات الرياضية.")
+
+# --- دالة جلب البيانات من API ---
+def get_predictions():
     url = "https://football-prediction-api.p.rapidapi.com/api/v2/predictions"
     headers = {
         "x-rapidapi-key": API_KEY,
         "x-rapidapi-host": "football-prediction-api.p.rapidapi.com"
     }
-    params = {"market": "classic", "iso_date": today}
-    
+    params = {"market": "classic", "iso_date": datetime.now().strftime('%Y-%m-%d')}
     try:
         response = requests.get(url, headers=headers, params=params)
         return response.json()
     except Exception as e:
-        print(f"خطأ في الاتصال بـ API: {e}")
+        print(f"خطأ API: {e}")
         return None
 
-# --- دالة النشر التلقائي ---
-def auto_post():
+# --- مهمة النشر التلقائي ---
+def auto_post_task():
     while True:
-        data = get_football_predictions()
+        data = get_predictions()
         if data and 'data' in data and len(data['data']) > 0:
             match = data['data'][0]
-            msg = f"⚽ **توقعات اليوم {datetime.now().strftime('%Y-%m-%d')}:**\n\n{match.get('home_team')} vs {match.get('away_team')}"
+            msg = f"⚽ توقعات اليوم:\n{match['home_team']} vs {match['away_team']}\nالنتيجة: {match.get('prediction', 'غير متوفرة')}"
             try:
                 bot.send_message(CHANNEL_ID, msg)
+                print("تم النشر بنجاح!")
             except Exception as e:
-                print(f"خطأ في النشر للقناة: {e}")
+                print(f"خطأ في النشر (تأكد أن البوت Admin في القناة): {e}")
         
-        # الانتظار لمدة 6 ساعات قبل النشر مرة أخرى
-        time.sleep(21600)
+        sleep(21600) # النشر كل 6 ساعات
 
-# --- دالة التشغيل المضادة للتعارض ---
+# --- التشغيل ---
 def run_bot():
-    print("البوت يحاول الاتصال بتيليجرام...")
-    # إزالة أي Webhook قديم أو اتصالات معلقة
     bot.remove_webhook()
-    # تشغيل البوت مع تخطي أي تحديثات قديمة لتجنب خطأ 409
-    bot.infinity_polling(none_stop=True, skip_pending=True)
+    bot.infinity_polling(skip_pending=True)
 
 if __name__ == '__main__':
-    # تشغيل مهام البوت والخادم معاً
-    Thread(target=run_bot).start()
-    Thread(target=auto_post).start()
+    threading.Thread(target=run_bot).start()
+    threading.Thread(target=auto_post_task).start()
     app.run(host='0.0.0.0', port=10000)
