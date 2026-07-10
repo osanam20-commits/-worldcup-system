@@ -8,7 +8,7 @@ from datetime import datetime
 # --- الإعدادات ---
 TOKEN = "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts"
 CHANNEL_ID = "-1004372754611"
-API_KEY = "https://football-prediction-api.p.rapidapi.com/api/v2/predictions?market=classic&iso_date=2026-07-09&federation=UEFA"
+API_KEY = "3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590"
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
