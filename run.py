@@ -1,4 +1,4 @@
-منimport telebot
+import telebot
 import requests
 from flask import Flask
 from threading import Thread
