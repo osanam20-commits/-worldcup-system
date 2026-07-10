@@ -10,6 +10,9 @@ bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
 # --- دالة استقبال الرسائل ---
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, "تم استلام رسالتك!")
 @app.route('/' + TOKEN, methods=['POST'])
 def getMessage():
     json_string = request.get_data().decode('utf-8')
