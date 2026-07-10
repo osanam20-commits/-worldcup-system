@@ -4,7 +4,7 @@ from flask import Flask, request
 
 TOKEN = "8689943788:AAHOD6jINGiV_g8wHYJ8eZ5SwO6_OLngoYE"
 CHANNEL_ID = "-1004372754611"
-URL = "https://worldcup-system.onrender.com/" # استبدل اسم-مشروعك برابط موقعك الحقيقي على Render
+URL = "https://wor-ldcup-system.onrender.com/" # استبدل اسم-مشروعك برابط موقعك الحقيقي على Render
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
