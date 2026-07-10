@@ -1,4 +1,4 @@
-import telebot
+منimport telebot
 import requests
 from flask import Flask
 from threading import Thread
@@ -7,7 +7,11 @@ import time
 TOKEN = "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts"
 CHANNEL_ID = "-1004372754611"
 # استخدم مفتاحاً خاصاً بـ API أخبار بدلاً من API التوقعات
-NEWS_API_KEY = "https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo "
+NEWS_API_KEY = "curl --request GET \
+	--url https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo \
+	--header 'Content-Type: application/json' \
+	--header 'x-rapidapi-host: nfl-football-api.p.rapidapi.com' \
+	--header 'x-rapidapi-key: 3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590' "
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
