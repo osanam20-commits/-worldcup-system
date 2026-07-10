@@ -7,7 +7,7 @@ import time
 TOKEN = "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts"
 CHANNEL_ID = "-1004372754611"
 # استخدم مفتاحاً خاصاً بـ API أخبار بدلاً من API التوقعات
-NEWS_API_KEY = "https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo \"
+NEWS_API_KEY = "https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo "
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
