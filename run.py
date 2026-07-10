@@ -1,64 +1,56 @@
 import telebot
 import requests
-import threading
 from flask import Flask
-from time import sleep
-from datetime import datetime
+from threading import Thread
+import time
 
-# --- الإعدادات ---
 TOKEN = "8689943788:AAFfmE62a4h-eLXYAcOXvSUgmkLs5KZZwts"
 CHANNEL_ID = "-1004372754611"
-API_KEY = "3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590"
+# استخدم مفتاحاً خاصاً بـ API أخبار بدلاً من API التوقعات
+NEWS_API_KEY = "curl --request GET \
+	--url https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo \
+	--header 'Content-Type: application/json' \
+	--header 'x-rapidapi-host: nfl-football-api.p.rapidapi.com' \
+	--header 'x-rapidapi-key: 3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590'"
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# --- المسار لـ Render ---
 @app.route('/')
 def home():
     return "البوت يعمل بكفاءة!"
 
-# --- أمر للتأكد من عمل البوت ---
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, "أهلاً بك! أنا جاهز لنشر التوقعات الرياضية.")
-
-# --- دالة جلب البيانات من API ---
-def get_predictions():
-    url = "https://football-prediction-api.p.rapidapi.com/api/v2/predictions"
+def get_sports_news():
+    # هذا الرابط كمثال، يجب تغييره حسب الـ API الذي ستختاره من RapidAPI
+    url = "https://sport-news-api.p.rapidapi.com/get-news"
     headers = {
-        "x-rapidapi-key": API_KEY,
-        "x-rapidapi-host": "football-prediction-api.p.rapidapi.com"
+        "x-rapidapi-key": NEWS_API_KEY,
+        "x-rapidapi-host": "sport-news-api.p.rapidapi.com"
     }
-    params = {"market": "classic", "iso_date": datetime.now().strftime('%Y-%m-%d')}
     try:
-        response = requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=headers)
         return response.json()
     except Exception as e:
-        print(f"خطأ API: {e}")
+        print(f"خطأ في جلب الأخبار: {e}")
         return None
 
-# --- مهمة النشر التلقائي ---
-def auto_post_task():
+def auto_post_news():
     while True:
-        data = get_predictions()
-        if data and 'data' in data and len(data['data']) > 0:
-            match = data['data'][0]
-            msg = f"⚽ توقعات اليوم:\n{match['home_team']} vs {match['away_team']}\nالنتيجة: {match.get('prediction', 'غير متوفرة')}"
-            try:
-                bot.send_message(CHANNEL_ID, msg)
-                print("تم النشر بنجاح!")
-            except Exception as e:
-                print(f"خطأ في النشر (تأكد أن البوت Admin في القناة): {e}")
+        data = get_sports_news()
+        if data and 'articles' in data:
+            # نشر أول خبر في القائمة
+            article = data['articles'][0]
+            msg = f"📰 {article['title']}\n\n{article['summary']}\n\nالمصدر: {article['url']}"
+            bot.send_message(CHANNEL_ID, msg)
         
-        sleep(21600) # النشر كل 6 ساعات
+        # النشر كل ساعتين (7200 ثانية)
+        time.sleep(7200)
 
-# --- التشغيل ---
 def run_bot():
     bot.remove_webhook()
     bot.infinity_polling(skip_pending=True)
 
 if __name__ == '__main__':
-    threading.Thread(target=run_bot).start()
-    threading.Thread(target=auto_post_task).start()
+    Thread(target=run_bot).start()
+    Thread(target=auto_post_news).start()
     app.run(host='0.0.0.0', port=10000)
