@@ -5,9 +5,9 @@ from flask import Flask, request
 TOKEN = "8689943788:AAHOD6jINGiV_g8wHYJ8eZ5SwO6_OLngoYE"
 CHANNEL_ID = "-1004372754611"
 NEWS_API_KEY = "curl --request GET \
-	--url https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo \
+	--url 'https://amazon-pricing-and-product-info.p.rapidapi.com/?asin=B07GR5MSKD&domain=de' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: nfl-football-api.p.rapidapi.com' \
+	--header 'x-rapidapi-host: amazon-pricing-and-product-info.p.rapidapi.com' \
 	--header 'x-rapidapi-key: 3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590'"
 
 bot = telebot.TeleBot(TOKEN)
