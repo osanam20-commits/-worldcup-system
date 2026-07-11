@@ -3,42 +3,49 @@ import requests
 from flask import Flask, request
 
 TOKEN = "8689943788:AAHOD6jINGiV_g8wHYJ8eZ5SwO6_OLngoYE"
-CHANNEL_ID = "-1004372754611" # تأكد أنه يبدأ بـ -100
-NEWS_API_KEY = "curl --request GET \
-	--url https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo \
-	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: nfl-football-api.p.rapidapi.com' \
-	--header 'x-rapidapi-key: 3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590'" # تأكد من وضعه هنا
+CHANNEL_ID = "-1004372754611"
+NEWS_API_KEY = "https://wor-ldcup-system.onrender.com/"
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
 # --- دالة جلب الأخبار ---
 def fetch_news():
-    url = "https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo" # رابط الـ API
+    url = "https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo"
     headers = {
         "x-rapidapi-key": NEWS_API_KEY,
         "x-rapidapi-host": "nfl-football-api.p.rapidapi.com"
     }
     try:
         response = requests.get(url, headers=headers)
+        # طباعة حالة الـ API في الـ Logs لمعرفة سبب فشل النشر
+        print(f"API Response Status: {response.status_code}")
         return response.json()
     except Exception as e:
+        print(f"API Error: {e}")
         return None
 
-# --- دالة الأمر /wc ---
+# --- الرد على الأوامر ---
 @bot.message_handler(commands=['wc'])
 def send_news(message):
-    bot.reply_to(message, "جاري جلب آخر الأخبار ونشرها في القناة...")
+    bot.reply_to(message, "جاري جلب البيانات من الـ API...")
     news_data = fetch_news()
     if news_data:
-        # هنا تضع صيغة الخبر حسب ما يرجعه الـ API الخاص بك
-        news_text = f"⚽ خبر جديد:\n{str(news_data)}" 
-        bot.send_message(CHANNEL_ID, news_text)
+        try:
+            # هنا يمكنك تنسيق النص كما تحب
+            msg = f"⚽ معلومات الدوري:\n{str(news_data)[:1000]}" # قص النص ليناسب تيليجرام
+            bot.send_message(CHANNEL_ID, msg)
+            bot.reply_to(message, "تم النشر في القناة بنجاح!")
+        except Exception as e:
+            bot.reply_to(message, f"خطأ في النشر للقناة: {e}")
     else:
-        bot.reply_to(message, "فشل جلب الأخبار، تأكد من مفتاح الـ API.")
+        bot.reply_to(message, "فشل جلب الأخبار من موقع الـ API.")
 
-# --- إعداد الويب هوك ---
+# --- المسارات ---
+@app.route('/')
+def home():
+    return "البوت يعمل بنظام Webhook!"
+
 @app.route('/' + TOKEN, methods=['POST'])
 def getMessage():
     json_string = request.get_data().decode('utf-8')
@@ -46,6 +53,7 @@ def getMessage():
     bot.process_new_updates([update])
     return "!", 200
 
+# إعداد الويب هوك عند التشغيل
 bot.remove_webhook()
 bot.set_webhook(url='https://wor-ldcup-system.onrender.com/' + TOKEN)
 
