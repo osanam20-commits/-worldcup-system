@@ -6,7 +6,11 @@ from flask import Flask, request
 
 TOKEN = "8689943788:AAHOD6jINGiV_g8wHYJ8eZ5SwO6_OLngoYE"
 CHANNEL_ID = "-1004372754611"
-NEWS_API_KEY = "3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590"
+NEWS_API_KEY = "curl --request GET \
+	--url https://sofascore.p.rapidapi.com/matches/get-h2h-events \
+	--header 'Content-Type: application/json' \
+	--header 'x-rapidapi-host: sofascore.p.rapidapi.com' \
+	--header 'x-rapidapi-key: 3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590'"
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
