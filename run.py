@@ -28,6 +28,15 @@ def fetch_news():
     except Exception as e:
         print(f"API Error: {e}")
         return None
+def fetch_news():
+    url = "https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo"
+    # أضف هذا السطر للـ Log
+    print(f"استخدام المفتاح: {NEWS_API_KEY}") 
+    headers = {
+        "x-rapidapi-key": NEWS_API_KEY,
+        "x-rapidapi-host": "nfl-football-api.p.rapidapi.com"
+    }
+    # ... بقية الكود
 
 # --- الرد على الأوامر ---
 @bot.message_handler(commands=['wc'])
