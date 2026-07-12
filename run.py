@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 # --- الإعدادات ---
 TOKEN = "8689943788:AAHOD6jINGiV_g8wHYJ8eZ5SwO6_OLngoYE"
 CHANNEL_ID = "-1004372754611"
-NEWS_API_KEY = "3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590"
+NEWS_API_KEY = "2ae6b66328mshca746aeaef40d78p1b9e5djsn8c00eb2198c5"
 
 # --- تهيئة البوت والتطبيق ---
 bot = telebot.TeleBot(TOKEN)
