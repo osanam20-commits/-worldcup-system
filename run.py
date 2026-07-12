@@ -2,59 +2,49 @@ import telebot
 import requests
 from flask import Flask, request
 
+# --- الإعدادات ---
 TOKEN = "8689943788:AAHOD6jINGiV_g8wHYJ8eZ5SwO6_OLngoYE"
 CHANNEL_ID = "-1004372754611"
-NEWS_API_KEY = "curl --request GET \
-	--url 'https://best-nfl-api-live-scores-odds-stats-nfl-stats-api.p.rapidapi.com/api/v1/nfl/gamescore-by-id?gameid=401547401' \
-	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: best-nfl-api-live-scores-odds-stats-nfl-stats-api.p.rapidapi.com' \
-	--header 'x-rapidapi-key: 3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590'"
+NEWS_API_KEY = "3ceaa7be00msha38c948056a4052p1fd973jsn92dcc1392590" # ضع مفتاحك بدقة
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# --- دالة جلب الأخبار ---
+# --- دالة جلب الأخبار المعدلة ---
 def fetch_news():
     url = "https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo"
     headers = {
         "x-rapidapi-key": NEWS_API_KEY,
         "x-rapidapi-host": "nfl-football-api.p.rapidapi.com"
     }
+    
     try:
         response = requests.get(url, headers=headers)
-        # طباعة حالة الـ API في الـ Logs لمعرفة سبب فشل النشر
-        print(f"API Response Status: {response.status_code}")
-        return response.json()
+        # طباعة تفاصيل الطلب في الـ Logs
+        print(f"--- حالة الاتصال: {response.status_code} ---")
+        print(f"--- نص الرد: {response.text} ---")
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
     except Exception as e:
-        print(f"API Error: {e}")
+        print(f"خطأ في الاتصال: {e}")
         return None
-def fetch_news():
-    url = "https://nfl-football-api.p.rapidapi.com/nfl-leagueinfo"
-    # أضف هذا السطر للـ Log
-    print(f"استخدام المفتاح: {NEWS_API_KEY}") 
-    headers = {
-        "x-rapidapi-key": NEWS_API_KEY,
-        "x-rapidapi-host": "nfl-football-api.p.rapidapi.com"
-    }
-    # ... بقية الكود
 
-# --- الرد على الأوامر ---
+# --- الأوامر ---
 @bot.message_handler(commands=['wc'])
 def send_news(message):
-    bot.reply_to(message, "جاري جلب البيانات من الـ API...")
+    bot.reply_to(message, "جاري محاولة الاتصال بالخادم...")
     news_data = fetch_news()
+    
     if news_data:
-        try:
-            # هنا يمكنك تنسيق النص كما تحب
-            msg = f"⚽ معلومات الدوري:\n{str(news_data)[:1000]}" # قص النص ليناسب تيليجرام
-            bot.send_message(CHANNEL_ID, msg)
-            bot.reply_to(message, "تم النشر في القناة بنجاح!")
-        except Exception as e:
-            bot.reply_to(message, f"خطأ في النشر للقناة: {e}")
+        msg = f"⚽ أخبار الدوري:\n{str(news_data)[:1000]}"
+        bot.send_message(CHANNEL_ID, msg)
+        bot.reply_to(message, "تم النشر في القناة بنجاح!")
     else:
-        bot.reply_to(message, "فشل جلب الأخبار من موقع الـ API.")
+        bot.reply_to(message, "فشل جلب الأخبار. تأكد من الـ Logs في Render لرؤية سبب الخطأ.")
 
-# --- المسارات ---
 @app.route('/')
 def home():
     return "البوت يعمل بنظام Webhook!"
@@ -66,7 +56,7 @@ def getMessage():
     bot.process_new_updates([update])
     return "!", 200
 
-# إعداد الويب هوك عند التشغيل
+# --- تشغيل البوت ---
 bot.remove_webhook()
 bot.set_webhook(url='https://wor-ldcup-system.onrender.com/' + TOKEN)
 
